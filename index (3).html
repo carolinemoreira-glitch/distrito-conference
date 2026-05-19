@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Distrito Conference — 1º Semestre 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Inter+Tight:ital,wght@0,300;0,700;0,800;0,900;1,300;1,700;1,800&display=swap" rel="stylesheet">
+<style>
+/* ── RESET & BASE ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: #0c0d10; font-family: 'Inter', sans-serif; }
+
+/* ── VARIABLES ── */
+:root {
+  --brand:   #d0095f;
+  --dark:    #0c0d10;
+  --dark2:   #1e2128;
+  --dark3:   #2e3240;
+  --white:   #ffffff;
+  --off:     #f5f6f8;
+  --muted:   #68707d;
+  --soft:    #9aa0ab;
+  --rule:    #e2e5ea;
+  --green:   #059669;
+  --amber:   #b45309;
+  --blue:    #0e7490;
+  --purple:  #7c3aed;
+}
+
+/* ── SLIDE DECK ── */
+.deck {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Each slide fills the viewport maintaining 16:9 */
+.slide {
+  position: absolute;
+  inset: 0;
+  display: none;
+  overflow: hidden;
+}
+.slide.active { display: flex; }
+
+/* Centering container — keeps 16:9 at any viewport size */
+.slide-wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0c0d10;
+}
+
+.slide-inner {
+  position: relative;
+  width: min(100vw, calc(100vh * 16/9));
+  height: min(100vh, calc(100vw * 9/16));
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp   { from { opacity:0; transform:translateY(28px) } to { opacity:1; transform:translateY(0) } }
+@keyframes fadeIn   { from { opacity:0 } to { opacity:1 } }
+@keyframes scaleIn  { from { opacity:0; transform:scale(.92) } to { opacity:1; transform:scale(1) } }
+@keyframes slideR   { from { opacity:0; transform:translateX(-24px) } to { opacity:1; transform:translateX(0) } }
+
+.slide.active .a1  { animation: fadeUp  .5s  cubic-bezier(.16,1,.3,1) .05s both }
+.slide.active .a2  { animation: fadeUp  .5s  cubic-bezier(.16,1,.3,1) .15s both }
+.slide.active .a3  { animation: fadeUp  .5s  cubic-bezier(.16,1,.3,1) .25s both }
+.slide.active .a4  { animation: fadeUp  .5s  cubic-bezier(.16,1,.3,1) .35s both }
+.slide.active .a5  { animation: fadeUp  .5s  cubic-bezier(.16,1,.3,1) .45s both }
+.slide.active .a6  { animation: fadeUp  .5s  cubic-bezier(.16,1,.3,1) .55s both }
+.slide.active .aL  { animation: scaleIn .6s  cubic-bezier(.16,1,.3,1) .1s  both }
+.slide.active .aR  { animation: slideR  .55s cubic-bezier(.16,1,.3,1) .2s  both }
+
+/* ── NAVIGATION ── */
+.nav {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 28px;
+  background: rgba(12,13,16,.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(255,255,255,.06);
+  z-index: 200;
+  gap: 16px;
+}
+
+.nav-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.12);
+  background: transparent;
+  color: rgba(255,255,255,.55);
+  cursor: pointer;
+  transition: all 180ms;
+  flex-shrink: 0;
+}
+.nav-arrow:hover:not(:disabled) { border-color: var(--brand); color: var(--brand); background: rgba(208,9,95,.08); }
+.nav-arrow:disabled { opacity: .2; cursor: default; }
+.nav-arrow svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+.nav-dots {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  justify-content: center;
+}
+.nav-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.2);
+  cursor: pointer;
+  transition: all 220ms;
+  border: none;
+}
+.nav-dot.active { width: 22px; border-radius: 3px; background: var(--brand); }
+.nav-dot:hover:not(.active) { background: rgba(255,255,255,.45); }
+
+.nav-counter {
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(255,255,255,.28);
+  letter-spacing: .08em;
+  white-space: nowrap;
+  flex-shrink: 0;
+  min-width: 44px;
+  text-align: right;
+}
+
+/* ── SHORTCUTS HINT ── */
+.hint {
+  position: fixed;
+  top: 14px; right: 18px;
+  font-size: 10px;
+  color: rgba(255,255,255,.18);
+  letter-spacing: .06em;
+  z-index: 200;
+  pointer-events: none;
+}
+
+/* ══════════════════════════════════════════════════
+   SLIDE STYLES — content uses % units relative to
+   slide-inner (16:9 box)
+══════════════════════════════════════════════════ */
+
+/* ── SHARED ── */
+.s-bg-dark  { background: var(--dark); }
+.s-bg-light { background: var(--off); }
+
+.top-bar {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: .6%;
+  background: var(--brand);
+}
+
+.overline {
+  font-size: 1.05%;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--brand);
+  display: block;
+  margin-bottom: .8%;
+}
+
+.s-title {
+  font-family: 'Inter Tight', 'Inter', sans-serif;
+  font-size: 4%;
+  font-weight: 800;
+  color: var(--dark);
+  line-height: 1.1;
+  letter-spacing: -.02em;
+  margin-bottom: 1%;
+}
+.s-title.white { color: var(--white); }
+
+.s-sub {
+  font-size: 1.3%;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* card */
+.card {
+  background: var(--white);
+  border-radius: 1%;
+  box-shadow: 0 2px 12px rgba(0,0,0,.08);
+  overflow: hidden;
+}
+.card-dark {
+  background: var(--dark2);
+  border-radius: 1%;
+  overflow: hidden;
+}
+
+/* accent card (left border) */
+.acc-card {
+  position: relative;
+  background: var(--white);
+  border-radius: 0 1% 1% 0;
+  box-shadow: 0 2px 12px rgba(0,0,0,.08);
+  overflow: hidden;
+}
+.acc-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: .5%;
+  background: var(--brand);
+}
+
+/* pill */
+.pill {
+  display: inline-block;
+  font-size: .95%;
+  font-weight: 700;
+  padding: .3% .8%;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.pill-brand  { background: rgba(208,9,95,.12); color: var(--brand); border: 1px solid rgba(208,9,95,.25); }
+.pill-green  { background: rgba(5,150,105,.12); color: var(--green); border: 1px solid rgba(5,150,105,.25); }
+.pill-amber  { background: rgba(180,83,9,.12);  color: var(--amber); border: 1px solid rgba(180,83,9,.25); }
+.pill-blue   { background: rgba(14,116,144,.12); color: var(--blue);  border: 1px solid rgba(14,116,144,.25); }
+.pill-purple { background: rgba(124,58,237,.12); color: var(--purple);border: 1px solid rgba(124,58,237,.25); }
+.pill-teal   { background: rgba(14,116,144,.12); color: var(--blue);  border: 1px solid rgba(14,116,144,.25); }
+
+/* avatar */
+.avatar {
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+/* divider */
+.divider-label {
+  font-size: .95%;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 1%;
+}
+.divider-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+}
+
+/* stat box */
+.stat-box {
+  background: var(--dark2);
+  border-radius: 1%;
+  padding: 2% 2.5%;
+  position: relative;
+  overflow: hidden;
+}
+.stat-box::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2.5%;
+  background: var(--brand);
+}
+.stat-label {
+  font-size: .9%;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: rgba(255,255,255,.35);
+  margin-bottom: 4%;
+  display: block;
+}
+.stat-value {
+  font-family: 'Inter Tight', sans-serif;
+  font-size: 5%;
+  font-weight: 900;
+  color: var(--white);
+  line-height: 1;
+}
+
+/* quote text */
+.quote {
+  font-size: 1.15%;
+  color: var(--muted);
+  line-height: 1.6;
+  font-style: italic;
+}
+
+/* ══ SLIDE 1 — CAPA ══ */
+#s1 .slide-inner {
+  background: var(--dark);
+  position: relative;
+}
+#s1 .glow {
+  position: absolute;
+  width: 50%; height: 90%;
+  top: -20%; right: -10%;
+  background: radial-gradient(circle, rgba(208,9,95,.12) 0%, transparent 65%);
+  pointer-events: none;
+}
+#s1 .grid-lines {
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent calc(100%/14 - 1px), rgba(255,255,255,.025) calc(100%/14)),
+    repeating-linear-gradient(90deg, transparent, transparent calc(100%/22 - 1px), rgba(255,255,255,.025) calc(100%/22));
+  pointer-events: none;
+}
+#s1 .content {
+  position: absolute;
+  left: 6%; top: 12%;
+  width: 70%;
+}
+#s1 .badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .8%;
+  border: 1.5px solid rgba(208,9,95,.55);
+  border-radius: 999px;
+  padding: .6% 1.8%;
+  margin-bottom: 3.5%;
+}
+#s1 .badge-dot {
+  width: .8%; height: .8%;
+  border-radius: 50%;
+  background: var(--brand);
+  flex-shrink: 0;
+  animation: pulse 2.2s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(208,9,95,.6); }
+  50%      { box-shadow: 0 0 0 5px rgba(208,9,95,0); }
+}
+#s1 .badge-text {
+  font-size: 1.05%;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: #fff;
+}
+#s1 .main-title {
+  font-family: 'Inter Tight', sans-serif;
+  font-size: 12%;
+  font-weight: 300;
+  color: var(--white);
+  line-height: .95;
+  letter-spacing: -.025em;
+  margin-bottom: 0;
+}
+#s1 .main-em {
+  font-style: italic;
+  color: var(--brand);
+}
+#s1 .rule {
+  width: 52%;
+  height: 1px;
+  background: rgba(255,255,255,.1);
+  margin: 2.5% 0;
+}
+#s1 .subtitle {
+  font-size: 1.25%;
+  color: rgba(255,255,255,.38);
+  font-weight: 300;
+  line-height: 1.5;
+}
+#s1 .date-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: .7%;
+  margin-top: 2.5%;
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: .4%;
+  padding: .5% 1.2%;
+  font-size: .95%;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.3);
+}
+
+/* ══ SLIDE 2 — BASE DE RESPOSTAS ══ */
+#s2 .content {
+  position: absolute;
+  left: 4%; top: 4%;
+  right: 4%;
+}
+#s2 .stats-row {
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 1.2%;
+  margin-bottom: 2.5%;
+}
+#s2 .resp-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1%;
+}
+#s2 .resp-row {
+  display: flex;
+  align-items: center;
+  gap: 1.5%;
+  background: var(--white);
+  border-radius: .8%;
+  padding: 1.6% 2%;
+  box-shadow: 0 1px 6px rgba(0,0,0,.06);
+}
+#s2 .resp-name {
+  font-size: 1.5%;
+  font-weight: 700;
+  color: var(--dark);
+  flex: 1;
+}
+#s2 .resp-sub {
+  font-size: 1%;
+  color: var(--muted);
+  margin-top: .3%;
+}
+#s2 .arrow {
+  font-size: 1.4%;
+  color: var(--soft);
+}
+
+/* ══ SLIDE 3 — DATA DE ENTRADA ══ */
+#s3 .cols {
+  position: absolute;
+  left: 4%; right: 4%;
+  top: 22%; bottom: 10%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2%;
+}
+#s3 .col-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2%;
+}
+#s3 .col-header {
+  margin-bottom: .5%;
+}
+#s3 .person-card {
+  display: flex;
+  align-items: center;
+  gap: 1.5%;
+  background: var(--white);
+  border-radius: .8%;
+  padding: 1.8% 2%;
+  box-shadow: 0 1px 6px rgba(0,0,0,.06);
+  position: relative;
+}
+
+/* ══ SLIDE 4 — PARTICIPAÇÃO ══ */
+#s4 .blocks {
+  position: absolute;
+  left: 4%; right: 4%;
+  top: 23%; bottom: 8%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2%;
+}
+#s4 .block {
+  border-radius: 1%;
+  background: var(--dark2);
+  overflow: hidden;
+  position: relative;
+  padding: 3% 3.5% 3%;
+  display: flex;
+  flex-direction: column;
+}
+#s4 .block-bar {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: .7%;
+}
+#s4 .block-label {
+  font-size: .95%;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  margin-bottom: .5%;
+}
+#s4 .block-sub {
+  font-size: 1.05%;
+  color: var(--soft);
+  margin-bottom: 1%;
+}
+#s4 .block-num {
+  font-family: 'Inter Tight', sans-serif;
+  font-size: 9%;
+  font-weight: 900;
+  color: var(--white);
+  line-height: 1;
+}
+#s4 .block-num-label {
+  font-size: 1.1%;
+  color: var(--soft);
+  margin-bottom: 2%;
+}
+#s4 .block-divider {
+  height: 1px;
+  background: rgba(255,255,255,.08);
+  margin: 1.5% 0;
+}
+#s4 .block-person {
+  display: flex;
+  align-items: center;
+  gap: 1.5%;
+  margin-bottom: 1.2%;
+}
+#s4 .block-person:last-child { margin-bottom: 0; }
+#s4 .bp-name { font-size: 1.2%; font-weight: 700; color: var(--white); }
+#s4 .bp-sub  { font-size: .9%;  color: var(--soft); margin-top: .1%; }
+
+/* ══ SLIDE 5 — LÍDERES DESTAQUE ══ */
+#s5 .grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5%;
+}
+#s5 .leader-card {
+  position: relative;
+  background: var(--white);
+  border-radius: 0 .8% .8% 0;
+  box-shadow: 0 1px 8px rgba(0,0,0,.07);
+  padding: 2.5% 3% 2.5% 3.5%;
+  overflow: hidden;
+}
+#s5 .leader-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: .55%;
+  background: var(--brand);
+}
+#s5 .lc-num  { font-size: .85%; font-weight: 700; color: var(--brand); letter-spacing: .12em; text-transform: uppercase; margin-bottom: .6%; }
+#s5 .lc-name { font-size: 1.9%; font-weight: 800; color: var(--dark); margin-bottom: 1.2%; }
+#s5 .lc-quote{ font-size: 1.05%; color: var(--muted); line-height: 1.55; font-style: italic; }
+
+/* ══ SLIDE 6 — PESSOAS (Ana) ══ */
+#s6 .people-grid {
+  position: absolute;
+  left: 4%; right: 4%;
+  top: 23%; bottom: 8%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 1.5%;
+}
+.person-card {
+  background: var(--white);
+  border-radius: .8%;
+  box-shadow: 0 1px 8px rgba(0,0,0,.07);
+  padding: 2.5% 3%;
+  display: flex;
+  flex-direction: column;
+  gap: .8%;
+  overflow: hidden;
+}
+.pc-top {
+  display: flex;
+  align-items: center;
+  gap: 1.5%;
+}
+.pc-name  { font-size: 1.4%; font-weight: 800; color: var(--dark); }
+.pc-quote { font-size: 1.05%; color: var(--muted); line-height: 1.55; font-style: italic; flex: 1; }
+
+/* ══ SLIDE 7 — PESSOAS (Thiago + Larissa) ══ */
+#s7 .top-section {
+  position: absolute;
+  left: 4%; right: 4%;
+  top: 22%;
+  display: flex;
+  flex-direction: column;
+  gap: 1%;
+}
+#s7 .two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5%;
+}
+#s7 .bottom-section {
+  position: absolute;
+  left: 4%; right: 4%;
+  bottom: 8%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5%;
+}
+.empty-card {
+  background: var(--off);
+  border: 1px dashed var(--rule);
+  border-radius: .8%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .6%;
+}
+.empty-card span { font-size: 1.05%; color: var(--soft); }
+
+/* ══ SLIDE 8 — PROJETOS ══ */
+#s8 .three-col {
+  position: absolute;
+  left: 4%; right: 4%;
+  top: 22%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1.5%;
+}
+.proj-card {
+  background: var(--white);
+  border-radius: .8%;
+  box-shadow: 0 1px 8px rgba(0,0,0,.07);
+  padding: 2.5% 3%;
+  display: flex;
+  flex-direction: column;
+  gap: .8%;
+}
+.proj-num  { font-size: .85%; font-weight: 700; color: var(--brand); letter-spacing: .12em; text-transform: uppercase; }
+.proj-name { font-size: 1.25%; font-weight: 800; color: var(--dark); line-height: 1.3; }
+.proj-desc { font-size: 1.05%; color: var(--muted); line-height: 1.55; font-style: italic; flex: 1; }
+.proj-tags { display: flex; flex-wrap: wrap; gap: .5%; }
+
+#s8 .bottom-card {
+  position: absolute;
+  left: 4%; right: 4%;
+  bottom: 8%;
+  background: var(--white);
+  border-radius: 0 .8% .8% 0;
+  box-shadow: 0 1px 8px rgba(0,0,0,.07);
+  padding: 2% 3% 2% 3.5%;
+  display: flex;
+  align-items: center;
+  gap: 2%;
+  overflow: hidden;
+}
+#s8 .bottom-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: .55%;
+  background: var(--blue);
+}
+.bc-left { flex: 1; }
+.bc-num  { font-size: .85%; font-weight: 700; color: var(--blue); letter-spacing: .12em; text-transform: uppercase; margin-bottom: .4%; }
+.bc-name { font-size: 1.3%; font-weight: 800; color: var(--dark); margin-bottom: .5%; }
+.bc-desc { font-size: 1.05%; color: var(--muted); font-style: italic; }
+.bc-tags { display: flex; flex-wrap: wrap; gap: .5%; flex-shrink: 0; }
+
+/* ══ SLIDE 9 — ENCERRAMENTO ══ */
+#s9 .slide-inner {
+  background: var(--dark);
+  position: relative;
+}
+#s9 .big-num {
+  position: absolute;
+  left: 4%;
+  top: 2%;
+  font-family: 'Inter Tight', sans-serif;
+  font-size: 30%;
+  font-weight: 900;
+  color: rgba(255,255,255,.07);
+  line-height: 1;
+  user-select: none;
+}
+#s9 .left-content {
+  position: absolute;
+  left: 5%; top: 30%;
+  width: 40%;
+}
+#s9 .julho {
+  font-family: 'Inter Tight', sans-serif;
+  font-size: 5%;
+  font-weight: 900;
+  letter-spacing: .2em;
+  color: var(--brand);
+  text-transform: uppercase;
+  margin-bottom: .5%;
+}
+#s9 .ano {
+  font-size: 2.5%;
+  font-weight: 300;
+  color: var(--soft);
+  letter-spacing: .18em;
+  margin-bottom: 4%;
+}
+#s9 .accent-bar {
+  position: absolute;
+  left: 5%; top: 67%;
+  width: .45%; height: 22%;
+  background: var(--brand);
+  border-radius: 2px;
+}
+#s9 .closing-title {
+  position: absolute;
+  left: 6.5%; top: 67%;
+  font-size: 2.5%;
+  font-weight: 800;
+  color: var(--white);
+}
+#s9 .closing-sub {
+  position: absolute;
+  left: 6.5%; top: 74%;
+  width: 32%;
+  font-size: 1.15%;
+  color: var(--soft);
+  font-style: italic;
+  line-height: 1.6;
+}
+#s9 .nums-grid {
+  position: absolute;
+  right: 5%; top: 28%;
+  width: 38%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3% 4%;
+}
+#s9 .big-stat {
+  text-align: center;
+}
+#s9 .big-stat-n {
+  font-family: 'Inter Tight', sans-serif;
+  font-size: 9%;
+  font-weight: 900;
+  color: var(--white);
+  line-height: 1;
+}
+#s9 .big-stat-l {
+  font-size: 1.05%;
+  color: var(--soft);
+  margin-top: .5%;
+}
+</style>
+</head>
+<body>
+
+<div class="deck" id="deck">
+
+  <!-- ══ SLIDE 1 — CAPA ══ -->
+  <div class="slide active" id="s1">
+    <div class="slide-wrap">
+      <div class="slide-inner s-bg-dark">
+        <div class="glow"></div>
+        <div class="grid-lines"></div>
+        <div class="content">
+          <div class="badge a1">
+            <div class="badge-dot"></div>
+            <span class="badge-text">1º Semestre 2026</span>
+          </div>
+          <div class="a2">
+            <div class="main-title">Distrito</div>
+            <div class="main-title"><em class="main-em">Conference</em></div>
+          </div>
+          <div class="rule a3"></div>
+          <p class="subtitle a3">Formato de participação · Indicação de pessoas destaques · Indicação de projetos destaques</p>
+          <div class="date-pill a4">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--brand)" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            02 de Julho de 2026
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 2 — BASE DE RESPOSTAS ══ -->
+  <div class="slide" id="s2">
+    <div class="slide-wrap">
+      <div class="slide-inner s-bg-light">
+        <div class="top-bar"></div>
+        <div class="content">
+          <span class="overline a1">Formulário · Consolidado</span>
+          <div class="s-title a2">Base de Respostas</div>
+          <p class="s-sub a2" style="margin-bottom:2%">Todas as respostas recebidas no formulário do Distrito Conference.</p>
+
+          <div class="stats-row a3">
+            <div class="stat-box">
+              <span class="stat-label">Respondentes</span>
+              <div class="stat-value">3</div>
+            </div>
+            <div class="stat-box">
+              <span class="stat-label">Líderes</span>
+              <div class="stat-value">2</div>
+            </div>
+            <div class="stat-box">
+              <span class="stat-label">Pessoas Indicadas</span>
+              <div class="stat-value">7</div>
+            </div>
+            <div class="stat-box">
+              <span class="stat-label">Projetos Indicados</span>
+              <div class="stat-value">4</div>
+            </div>
+          </div>
+
+          <div class="resp-list">
+            <div class="resp-row a4">
+              <div class="avatar" style="width:3.6%;height:3.6%;background:linear-gradient(135deg,#d0095f,#ff6bae);font-size:1.1%">AS</div>
+              <div style="flex:1">
+                <div class="resp-name">Ana Silva</div>
+                <div class="resp-sub">Líder · Antes de 23/03/2025 · Presencial</div>
+              </div>
+              <span class="pill pill-brand">Líder</span>
+              <span class="pill pill-green">Antes de 23/03/2025</span>
+              <span class="arrow">→</span>
+            </div>
+            <div class="resp-row a5">
+              <div class="avatar" style="width:3.6%;height:3.6%;background:linear-gradient(135deg,#0e7490,#0891b2);font-size:1.1%">TO</div>
+              <div style="flex:1">
+                <div class="resp-name">Thiago Oliveira</div>
+                <div class="resp-sub">Distriter · Depois de 23/03/2025 · Online</div>
+              </div>
+              <span class="pill pill-teal">Distriter</span>
+              <span class="pill pill-amber">Depois de 23/03/2025</span>
+              <span class="arrow">→</span>
+            </div>
+            <div class="resp-row a6">
+              <div class="avatar" style="width:3.6%;height:3.6%;background:linear-gradient(135deg,#b45309,#d97706);font-size:1.1%">LP</div>
+              <div style="flex:1">
+                <div class="resp-name">Larissa Prado</div>
+                <div class="resp-sub">Líder · Antes de 23/03/2025 · Presencial</div>
+              </div>
+              <span class="pill pill-brand">Líder</span>
+              <span class="pill pill-green">Antes de 23/03/2025</span>
+              <span class="arrow">→</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 3 — DATA DE ENTRADA ══ -->
+  <div class="slide" id="s3">
+    <div class="slide-wrap">
+      <div class="slide-inner s-bg-light">
+        <div class="top-bar"></div>
+        <div style="position:absolute;left:4%;top:4%;right:4%">
+          <span class="overline a1">Filtro · Critério de Elegibilidade</span>
+          <div class="s-title a2">Data de Entrada</div>
+          <p class="s-sub a2">Respondentes separados pelo critério de data de entrada — corte em <strong>23 de março de 2025</strong>.</p>
+        </div>
+        <div class="cols">
+          <div class="a3">
+            <div class="divider-label col-header" style="color:var(--green)">Antes de 23/03/2025 — elegíveis <span class="pill pill-green" style="font-size:.85%">2 pessoas</span></div>
+            <div class="col-inner" style="margin-top:1.5%">
+              <div class="person-card" style="background:white;border-radius:.8%;padding:1.8% 2%;box-shadow:0 1px 6px rgba(0,0,0,.06);display:flex;align-items:center;gap:1.5%">
+                <div style="width:2.5%;height:2.5%;border-radius:50%;background:var(--green);flex-shrink:0"></div>
+                <div class="avatar" style="width:3.6%;height:3.6%;background:linear-gradient(135deg,#d0095f,#ff6bae);font-size:1.1%">AS</div>
+                <div>
+                  <div style="font-size:1.4%;font-weight:700;color:var(--dark)">Ana Silva</div>
+                  <div style="font-size:.95%;color:var(--muted)">Líder · Presencial</div>
+                </div>
+                <span class="pill pill-green" style="margin-left:auto">Antes de 23/03/2025</span>
+              </div>
+              <div class="person-card" style="background:white;border-radius:.8%;padding:1.8% 2%;box-shadow:0 1px 6px rgba(0,0,0,.06);display:flex;align-items:center;gap:1.5%">
+                <div style="width:2.5%;height:2.5%;border-radius:50%;background:var(--green);flex-shrink:0"></div>
+                <div class="avatar" style="width:3.6%;height:3.6%;background:linear-gradient(135deg,#b45309,#d97706);font-size:1.1%">LP</div>
+                <div>
+                  <div style="font-size:1.4%;font-weight:700;color:var(--dark)">Larissa Prado</div>
+                  <div style="font-size:.95%;color:var(--muted)">Líder · Presencial</div>
+                </div>
+                <span class="pill pill-green" style="margin-left:auto">Antes de 23/03/2025</span>
+              </div>
+            </div>
+          </div>
+          <div class="a4">
+            <div class="divider-label col-header" style="color:var(--amber)">Depois de 23/03/2025 — fora do critério <span class="pill pill-amber" style="font-size:.85%">1 pessoa</span></div>
+            <div class="col-inner" style="margin-top:1.5%">
+              <div class="person-card" style="background:white;border-radius:.8%;padding:1.8% 2%;box-shadow:0 1px 6px rgba(0,0,0,.06);display:flex;align-items:center;gap:1.5%">
+                <div style="width:2.5%;height:2.5%;border-radius:50%;background:var(--amber);flex-shrink:0"></div>
+                <div class="avatar" style="width:3.6%;height:3.6%;background:linear-gradient(135deg,#0e7490,#0891b2);font-size:1.1%">TO</div>
+                <div>
+                  <div style="font-size:1.4%;font-weight:700;color:var(--dark)">Thiago Oliveira</div>
+                  <div style="font-size:.95%;color:var(--muted)">Distriter · Online</div>
+                </div>
+                <span class="pill pill-amber" style="margin-left:auto">Depois de 23/03/2025</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 4 — PARTICIPAÇÃO ══ -->
+  <div class="slide" id="s4">
+    <div class="slide-wrap">
+      <div class="slide-inner s-bg-light">
+        <div class="top-bar"></div>
+        <div style="position:absolute;left:4%;top:4%;right:4%">
+          <span class="overline a1">Formato · Confirmação</span>
+          <div class="s-title a2">Formato de Participação</div>
+          <p class="s-sub a2">Como cada respondente confirmou sua participação no Distrito Conference — <strong>02/07/2026</strong>.</p>
+        </div>
+        <div class="blocks">
+          <div class="block a3">
+            <div class="block-bar" style="background:var(--green)"></div>
+            <div class="block-label" style="color:var(--green)">Presencial</div>
+            <div class="block-sub">Distrito Hub · início às 14h</div>
+            <div class="block-num">2</div>
+            <div class="block-num-label">confirmados</div>
+            <div class="block-divider"></div>
+            <div class="block-person">
+              <div class="avatar" style="width:3.4%;height:3.4%;background:linear-gradient(135deg,#d0095f,#ff6bae);font-size:1%">AS</div>
+              <div><div class="bp-name">Ana Silva</div><div class="bp-sub">Líder</div></div>
+            </div>
+            <div class="block-divider"></div>
+            <div class="block-person">
+              <div class="avatar" style="width:3.4%;height:3.4%;background:linear-gradient(135deg,#b45309,#d97706);font-size:1%">LP</div>
+              <div><div class="bp-name">Larissa Prado</div><div class="bp-sub">Líder</div></div>
+            </div>
+          </div>
+          <div class="block a4">
+            <div class="block-bar" style="background:var(--blue)"></div>
+            <div class="block-label" style="color:var(--blue)">Online</div>
+            <div class="block-sub">Transmissão · início às 15h</div>
+            <div class="block-num">1</div>
+            <div class="block-num-label">confirmado</div>
+            <div class="block-divider"></div>
+            <div class="block-person">
+              <div class="avatar" style="width:3.4%;height:3.4%;background:linear-gradient(135deg,#0e7490,#0891b2);font-size:1%">TO</div>
+              <div><div class="bp-name">Thiago Oliveira</div><div class="bp-sub">Distriter</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 5 — LÍDERES DESTAQUE ══ -->
+  <div class="slide" id="s5">
+    <div class="slide-wrap">
+      <div class="slide-inner s-bg-light">
+        <div class="top-bar"></div>
+        <div style="position:absolute;left:4%;top:4%;right:4%">
+          <span class="overline a1">Indicações · Liderança</span>
+          <div class="s-title a2">Líderes Destaque</div>
+          <p class="s-sub a2">Cada líder indicou até 2 nomes com o respectivo motivo.</p>
+        </div>
+
+        <div style="position:absolute;left:4%;right:4%;top:24%">
+          <div class="divider-label a3" style="color:var(--brand);margin-bottom:1.5%">Indicações de Ana Silva</div>
+          <div class="grid2 a3" style="margin-bottom:2%">
+            <div class="leader-card">
+              <div class="lc-num">1ª Indicação</div>
+              <div class="lc-name">Carlos Mendes</div>
+              <div class="lc-quote">"Transformou completamente a dinâmica do time com escuta ativa e clareza nas prioridades. Entregou resultados acima do esperado mesmo em um semestre com muitas mudanças."</div>
+            </div>
+            <div class="leader-card">
+              <div class="lc-num">2ª Indicação</div>
+              <div class="lc-name">Fernanda Costa</div>
+              <div class="lc-quote">"Liderou a expansão de um novo produto com autonomia e maturidade. Construiu pontes entre áreas e inspirou o time com sua energia e comprometimento."</div>
+            </div>
+          </div>
+
+          <div class="divider-label a4" style="color:var(--brand);margin-bottom:1.5%">Indicações de Larissa Prado</div>
+          <div class="grid2 a4">
+            <div class="leader-card">
+              <div class="lc-num">1ª Indicação</div>
+              <div class="lc-name">Diego Rocha</div>
+              <div class="lc-quote">"Conduziu a área em um período de alta pressão com serenidade e foco. Manteve o time engajado e entregou todas as metas sem perder de vista o cuidado com as pessoas."</div>
+            </div>
+            <div class="leader-card">
+              <div class="lc-num">2ª Indicação</div>
+              <div class="lc-name">Camila Torres</div>
+              <div class="lc-quote">"Acelerou o desenvolvimento da equipe com feedbacks consistentes e desafios bem calibrados. Criou um ambiente seguro onde o time cresceu junto."</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 6 — PESSOAS (Ana Silva) ══ -->
+  <div class="slide" id="s6">
+    <div class="slide-wrap">
+      <div class="slide-inner s-bg-light">
+        <div class="top-bar"></div>
+        <div style="position:absolute;left:4%;top:4%;right:4%">
+          <span class="overline a1">Indicações · Pessoas — Ana Silva</span>
+          <div class="s-title a2">Pessoas Destaque</div>
+        </div>
+        <div class="people-grid">
+          <div class="person-card a3">
+            <div class="pc-top">
+              <div class="avatar" style="width:4%;height:4%;background:linear-gradient(135deg,#d0095f,#ff6bae);font-size:1.1%">RM</div>
+              <div>
+                <div class="pc-name">Ricardo Monteiro</div>
+                <span class="pill pill-brand" style="font-size:.9%">✦ Protagonista</span>
+              </div>
+            </div>
+            <div class="pc-quote">"Tomou frente em iniciativas que não eram de sua área, conectou times e entregou além do esperado. Foi o ponto de equilíbrio em momentos de pressão e soube comunicar decisões com clareza."</div>
+          </div>
+          <div class="person-card a4">
+            <div class="pc-top">
+              <div class="avatar" style="width:4%;height:4%;background:linear-gradient(135deg,#0e7490,#0891b2);font-size:1.1%">JL</div>
+              <div>
+                <div class="pc-name">Juliana Lima</div>
+                <span class="pill pill-teal" style="font-size:.9%">🤝 Parceria</span>
+              </div>
+            </div>
+            <div class="pc-quote">"Sempre disponível para colaborar, apoiou três áreas diferentes no mesmo período sem perder a qualidade das entregas. Referência em trabalho colaborativo e generosidade."</div>
+          </div>
+          <div class="person-card a5">
+            <div class="pc-top">
+              <div class="avatar" style="width:4%;height:4%;background:linear-gradient(135deg,#7c3aed,#a855f7);font-size:1.1%">BN</div>
+              <div>
+                <div class="pc-name">Bruno Neves</div>
+                <span class="pill pill-purple" style="font-size:.9%">💡 Experiência</span>
+              </div>
+            </div>
+            <div class="pc-quote">"Trouxe uma perspectiva única sobre o produto e transformou a forma como o time pensa a jornada do cliente. Seu repertório técnico e humano elevou as discussões do time."</div>
+          </div>
+          <div class="person-card a6">
+            <div class="pc-top">
+              <div class="avatar" style="width:4%;height:4%;background:linear-gradient(135deg,#b45309,#d97706);font-size:1.1%">PS</div>
+              <div>
+                <div class="pc-name">Patrícia Santos</div>
+                <span class="pill pill-amber" style="font-size:.9%">🏆 Resultados</span>
+              </div>
+            </div>
+            <div class="pc-quote">"Bateu todas as metas do semestre e ainda encontrou eficiências que reduziram 18% do custo operacional da área. Consistência rara aliada a alta capacidade de execução."</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 7 — PESSOAS (Thiago + Larissa) ══ -->
+  <div class="slide" id="s7">
+    <div class="slide-wrap">
+      <div class="slide-inner s-bg-light">
+        <div class="top-bar"></div>
+        <div style="position:absolute;left:4%;top:4%;right:4%">
+          <span class="overline a1">Indicações · Pessoas — Thiago Oliveira &amp; Larissa Prado</span>
+          <div class="s-title a2">Pessoas Destaque</div>
+        </div>
+
+        <div class="top-section a3">
+          <div class="divider-label" style="color:var(--blue);margin-bottom:1.2%">Thiago Oliveira <span class="pill pill-teal" style="font-size:.85%">2 indicadas</span></div>
+          <div class="two-col">
+            <div class="person-card">
+              <div class="pc-top">
+                <div class="avatar" style="width:4%;height:4%;background:linear-gradient(135deg,#d0095f,#ff6bae);font-size:1.1%">MF</div>
+                <div><div class="pc-name">Mariana Ferreira</div><span class="pill pill-brand" style="font-size:.9%">✦ Protagonista</span></div>
+              </div>
+              <div class="pc-quote">"Assumiu um projeto crítico no meio do semestre, sem histórico prévio, e entregou acima das expectativas. Liderou sem cargo e mobilizou o time com clareza e energia."</div>
+            </div>
+            <div class="person-card">
+              <div class="pc-top">
+                <div class="avatar" style="width:4%;height:4%;background:linear-gradient(135deg,#059669,#10b981);font-size:1.1%">GA</div>
+                <div><div class="pc-name">Gustavo Alves</div><span class="pill pill-amber" style="font-size:.9%">🏆 Resultados</span></div>
+              </div>
+              <div class="pc-quote">"Dobrou a carteira de clientes da squad em 4 meses mantendo NPS acima de 80. Entrega consistente com altíssima qualidade de relacionamento."</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bottom-section a4">
+          <div style="display:flex;flex-direction:column;gap:1%">
+            <div class="divider-label" style="color:var(--amber);margin-bottom:.5%">Larissa Prado <span class="pill pill-amber" style="font-size:.85%">1 indicada</span></div>
+            <div class="person-card">
+              <div class="pc-top">
+                <div class="avatar" style="width:4%;height:4%;background:linear-gradient(135deg,#7c3aed,#a855f7);font-size:1.1%">RB</div>
+                <div><div class="pc-name">Rafael Barbosa</div><span class="pill pill-purple" style="font-size:.9%">💡 Experiência</span></div>
+              </div>
+              <div class="pc-quote">"Trouxe do mercado referências que transformaram a abordagem do time. Sua generosidade em compartilhar conhecimento criou um salto de maturidade coletivo."</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:1%">
+            <div class="divider-label" style="color:var(--soft);margin-bottom:.5%">Thiago Oliveira — Projetos</div>
+            <div class="empty-card" style="height:100%">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--rule)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+              <span>Nenhum projeto indicado</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 8 — PROJETOS DESTAQUE ══ -->
+  <div class="slide" id="s8">
+    <div class="slide-wrap">
+      <div class="slide-inner s-bg-light">
+        <div class="top-bar"></div>
+        <div style="position:absolute;left:4%;top:4%;right:4%">
+          <span class="overline a1">Indicações · Projetos</span>
+          <div class="s-title a2">Projetos Destaque</div>
+          <p class="s-sub a2">Projetos indicados com descrição e categorias de impacto. Até <strong>3 projetos</strong> por respondente.</p>
+        </div>
+        <div style="position:absolute;left:4%;right:4%;top:22%">
+          <div class="divider-label a3" style="color:var(--brand);margin-bottom:1.2%">Ana Silva <span class="pill pill-brand" style="font-size:.85%">3 projetos</span></div>
+        </div>
+        <div class="three-col a3" style="top:28%">
+          <div class="proj-card">
+            <div class="proj-num">Projeto 1</div>
+            <div class="proj-name">Plataforma de Onboarding Digital</div>
+            <div class="proj-desc">"Reduziu em 40% o tempo de onboarding. Melhorou significativamente a experiência nas primeiras semanas. Projeto replicável para outros contextos."</div>
+            <div class="proj-tags">
+              <span class="pill pill-green" style="font-size:.85%">💰 Financeiro</span>
+              <span class="pill pill-amber" style="font-size:.85%">⚡ Produtividade</span>
+              <span class="pill pill-teal" style="font-size:.85%">😊 Satisfação</span>
+            </div>
+          </div>
+          <div class="proj-card">
+            <div class="proj-num">Projeto 2</div>
+            <div class="proj-name">Dashboard de KPIs em Tempo Real</div>
+            <div class="proj-desc">"Centralizou indicadores de 5 áreas, eliminando 6h semanais de consolidação manual e acelerando tomadas de decisão da liderança."</div>
+            <div class="proj-tags">
+              <span class="pill pill-amber" style="font-size:.85%">⚡ Produtividade</span>
+              <span class="pill pill-purple" style="font-size:.85%">🔭 Visibilidade</span>
+            </div>
+          </div>
+          <div class="proj-card">
+            <div class="proj-num">Projeto 3</div>
+            <div class="proj-name">Programa de Mentoria Interna</div>
+            <div class="proj-desc">"22 pares de mentoria, índice de satisfação de 94%. Fortaleceu a cultura de desenvolvimento e aumentou o engajamento no time."</div>
+            <div class="proj-tags">
+              <span class="pill pill-teal" style="font-size:.85%">😊 Satisfação</span>
+              <span class="pill pill-purple" style="font-size:.85%">🔭 Visibilidade</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="position:absolute;left:4%;right:4%;bottom:18%">
+          <div class="divider-label a4" style="color:var(--blue);margin-bottom:1.2%">Thiago Oliveira <span class="pill pill-teal" style="font-size:.85%">1 projeto</span></div>
+        </div>
+        <div class="bottom-card a4">
+          <div class="bc-left">
+            <div class="bc-num">Projeto 1</div>
+            <div class="bc-name">Automação do Fluxo de Contratos</div>
+            <div class="bc-desc">"Ciclo de 3 dias úteis caiu para 4 horas. Impacto direto em receita e satisfação dos parceiros."</div>
+          </div>
+          <div class="bc-tags">
+            <span class="pill pill-green" style="font-size:.85%">💰 Financeiro</span>
+            <span class="pill pill-amber" style="font-size:.85%">⚡ Produtividade</span>
+            <span class="pill pill-teal" style="font-size:.85%">😊 Satisfação</span>
+            <span class="pill pill-purple" style="font-size:.85%">🔭 Visibilidade</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 9 — ENCERRAMENTO ══ -->
+  <div class="slide" id="s9">
+    <div class="slide-wrap">
+      <div class="slide-inner s-bg-dark">
+        <div class="big-num aL">02</div>
+        <div class="left-content">
+          <div class="julho a2">Julho</div>
+          <div class="ano a2">2 0 2 6</div>
+        </div>
+        <div class="accent-bar a3"></div>
+        <div class="closing-title a3">Distrito Conference</div>
+        <div class="closing-sub a4">Celebrando talentos, resultados e projetos que marcaram o 1º semestre no Distrito.</div>
+        <div class="nums-grid aR">
+          <div class="big-stat">
+            <div class="big-stat-n">3</div>
+            <div class="big-stat-l">Respondentes</div>
+          </div>
+          <div class="big-stat">
+            <div class="big-stat-n">4</div>
+            <div class="big-stat-l">Líderes indicados</div>
+          </div>
+          <div class="big-stat">
+            <div class="big-stat-n">7</div>
+            <div class="big-stat-l">Pessoas indicadas</div>
+          </div>
+          <div class="big-stat">
+            <div class="big-stat-n">4</div>
+            <div class="big-stat-l">Projetos indicados</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /deck -->
+
+<!-- NAVIGATION -->
+<nav class="nav">
+  <button class="nav-arrow" id="btnPrev" onclick="go(-1)" disabled>
+    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+  </button>
+
+  <div class="nav-dots" id="dots"></div>
+
+  <span class="nav-counter" id="counter">1 / 9</span>
+
+  <button class="nav-arrow" id="btnNext" onclick="go(1)">
+    <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+  </button>
+</nav>
+
+<div class="hint">← → setas do teclado</div>
+
+<script>
+const TOTAL = 9;
+let cur = 0;
+
+const slides = document.querySelectorAll('.slide');
+const dotsEl = document.getElementById('dots');
+const counter = document.getElementById('counter');
+const btnPrev = document.getElementById('btnPrev');
+const btnNext = document.getElementById('btnNext');
+
+// Build dots
+slides.forEach((_, i) => {
+  const d = document.createElement('button');
+  d.className = 'nav-dot' + (i === 0 ? ' active' : '');
+  d.onclick = () => goTo(i);
+  dotsEl.appendChild(d);
+});
+
+function goTo(n) {
+  if (n < 0 || n >= TOTAL) return;
+  slides[cur].classList.remove('active');
+  dotsEl.children[cur].classList.remove('active');
+  cur = n;
+  slides[cur].classList.add('active');
+  dotsEl.children[cur].classList.add('active');
+  counter.textContent = (cur + 1) + ' / ' + TOTAL;
+  btnPrev.disabled = cur === 0;
+  btnNext.disabled = cur === TOTAL - 1;
+}
+
+function go(dir) { goTo(cur + dir); }
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); go(1); }
+  if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')                   { e.preventDefault(); go(-1); }
+  if (e.key === 'Home') goTo(0);
+  if (e.key === 'End')  goTo(TOTAL - 1);
+});
+
+// Swipe support
+let tx = 0;
+document.addEventListener('touchstart', e => tx = e.touches[0].clientX, { passive: true });
+document.addEventListener('touchend',   e => {
+  const dx = e.changedTouches[0].clientX - tx;
+  if (Math.abs(dx) > 50) go(dx < 0 ? 1 : -1);
+}, { passive: true });
+</script>
+</body>
+</html>
